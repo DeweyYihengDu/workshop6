@@ -108,7 +108,7 @@ Write your answer in the code chunk below:
 path <- "./data/OA_activitydat_20190302_BIOL3207.csv"
   
 data <- read_csv(path)
-
+data
 ```
 
 Let's say that you added a new data folder that was inside an output folder (i.e., `output/data`) to your working directory. The purpose of this folder is to store and track your cleaned up data frame after you have done all your data wrangling and corrections. 
@@ -120,8 +120,6 @@ Let's say that you added a new data folder that was inside an output folder (i.e
 path <- "./data/OA_activitydat_20190302_BIOL3207.csv"
 
 write_csv(data, file = "./output/data/1.csv")
-
-
 
 ```
 
@@ -143,11 +141,8 @@ Second, drop out irrelevant columns and check that there are no spelling issues 
 # Drop irrelevant columns
 
 # Check spelling in species and treatment but also generate a summary table
-
-# Use flextable to render the summary table in a tidy format
 data_1
-data_1 %>% group_by(species,treatment) %>% summarise(mean(size))
-
+# Use flextable to render the summary table in a tidy format
 
 ```
 
@@ -157,6 +152,8 @@ data_1 %>% group_by(species,treatment) %>% summarise(mean(size))
 
 ```{r answer5, echo=TRUE, eval=FALSE}
 ## Write your answer here....remember to use '#" in front of your text.
+
+# The red area means the codes which you have deleted and the green area means the codes which you changed and added.
 ```
 
 # **Task 5**
@@ -167,7 +164,7 @@ Ignoring figures can be important because they take up quite a lot of space in y
 
 ```{r, prettyfig, fig.align='center', fig.cap="add a legend here"}
 # ggplot figure showing mean activity for each treatment (Control, OA) for each species.
-
+#data_2
 
 ```
 
