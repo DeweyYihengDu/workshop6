@@ -9,9 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content />
+<meta name="author" content="Yiheng Du u7457260" />
 
-<meta name="date" content="2022-09-02" />
+<meta name="date" content="2022-09-09" />
 
 <title>Git, GitHub &amp; Ocean Acidification</title>
 
@@ -1586,8 +1586,8 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Git, GitHub &amp; Ocean Acidification</h1>
-<h4 class="author"><your name and u number></h4>
-<h4 class="date">2022-09-02</h4>
+<h4 class="author">Yiheng Du u7457260</h4>
+<h4 class="date">2022-09-09</h4>
 
 </div>
 
@@ -1619,13 +1619,16 @@ p_load(bookdown, tidyverse, ggforce, flextable, latex2exp, png, magick) # basica
 <blockquote>
 <p><strong>Question 1</strong>: Why should you not rely on <em>GitHub</em> as a backup?</p>
 </blockquote>
-<pre class="r"><code>## Write your answer here. </code></pre>
+<pre class="r"><code>## Write your answer here. 
+There is a limit to the upload speed of github, and github is not very stable, if the server crashes it will cause precious documents to be lost.</code></pre>
 <p>I’d usually suggest placing your repo in a cloud storage system like, <em>OneDrive</em>, <em>Dropbox</em>, or <em>GoogleDrive</em>. These will ensure that all your files are backed up and <em>GitHub</em> will provide a record of the detailed history.</p>
 <p>Before moving on you might have noticed that the code block above has a name <code>answer1</code> and I’ve added an argument <code>echo = TRUE</code>. It’s good to label code blocks with useful names to help you debug when rendering of your document goes wrong (when, not IF!). These names need to all be unique. There are a whole bunch of arguments that you can list within code chunks that tell each chunk what to do. You can look to the great <a href="https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf">Rmarkdown cheetsheet</a> for more information.</p>
 <blockquote>
 <p><strong>Question 2</strong>: In the second code block called <code>answer1</code> if we change echo = TRUE to echo = FALSE what will happen to the code block <code>answer1</code> when you render it?</p>
 </blockquote>
-<pre class="r"><code># Write your answer here</code></pre>
+<pre class="r"><code># Write your answer here
+
+echo=FALSE the final document will not show the code, only the results of the code run and the image</code></pre>
 <p><strong>Important</strong>: Notice that <code>eval = FALSE</code> for many code chunks. When you complete the tasks. Make sure to change these to <code>TRUE</code> otherwise you will find your code does not run!</p>
 </div>
 <div id="task-3" class="section level1">
@@ -1645,58 +1648,97 @@ p_load(bookdown, tidyverse, ggforce, flextable, latex2exp, png, magick) # basica
 <p><strong>Question 3</strong>: <strong>How would you write the path name to load in a data file from the data folder?</strong></p>
 </blockquote>
 <p>Write your answer in the code chunk below:</p>
-<pre class="r"><code>path &lt;- &quot;replace this text with your relative path to a file in the &#39;data/&#39; folder&quot;
+<pre class="r"><code>path &lt;- &quot;./data/OA_activitydat_20190302_BIOL3207.csv&quot;
   
-data &lt;- read_csv(path)</code></pre>
+data &lt;- read_csv(path)
+data</code></pre>
 <p>Let’s say that you added a new data folder that was inside an output folder (i.e., <code>output/data</code>) to your working directory. The purpose of this folder is to store and track your cleaned up data frame after you have done all your data wrangling and corrections.</p>
 <blockquote>
 <p><strong>Question 4</strong>: Using the <code>write_csv</code> function how would you write the path name to save this file to <code>output/data</code>?</p>
 </blockquote>
-<pre class="r"><code>path &lt;- &quot;replace this text with your relative path&quot;
+<pre class="r"><code>path &lt;- &quot;./data/OA_activitydat_20190302_BIOL3207.csv&quot;
 
-write_csv(data, file = path)</code></pre>
+write_csv(data, file = &quot;./output/data/1.csv&quot;)</code></pre>
 </div>
 <div id="task-4" class="section level1">
 <h1><strong>Task 4</strong></h1>
 <p>We’re ready for some coding! Lets do some coding and wrangling of the <code>OA_activitydat_20190302_BIOL3207.csv</code> data that we will use for the workshop. Note above, the <code>loaddata</code> code chunk should have already written the code to load the data file. At this point, we’re assuming it’s in your working space. If not, make sure you run the <code>loaddata</code> code chunk.</p>
 <p>First, write some code below to remove missing data</p>
-<pre class="r"><code># Code to removing missing data from the `OA_activitydat_20190302_BIOL3207.csv` data frame. </code></pre>
+<pre class="r"><code># Code to removing missing data from the `OA_activitydat_20190302_BIOL3207.csv` data frame. 
+data_1 &lt;- data %&gt;% filter(!(is.na(activity) | is.na(animal_id)))</code></pre>
 <p>Second, drop out irrelevant columns and check that there are no spelling issues in <code>species</code> and <code>treatment</code>. Create a table of summary data that includes: 1) the mean, 2) the standard error and 3) the sample sizes of unique fish across ALL six fish species for each treatment. This will also help you detect any spelling errors. You can use the R package <a href="https://ardata-fr.github.io/flextable-book/"><code>flextable</code></a> to print out the results in a nice neat format! If you haven’t heard about <code>flextable</code> spend 10 or so minutes having a look at it’s functionality. It’s incredible! You’ll use this for tables throughout.</p>
 <pre class="r"><code># Drop irrelevant columns
 
 # Check spelling in species and treatment but also generate a summary table
 
-# Use flextable to render the summary table in a tidy format</code></pre>
+# Use flextable to render the summary table in a tidy format
+data1_1 &lt;- select(data_1 ,-c(loc,animal_id,sl,comment))
+data_2 = data1_1 %&gt;% filter(species != &quot;whitedams&quot;)
+data_new=data_2 %&gt;% group_by(species,treatment) %&gt;% summarise(mean(activity),sd(activity), number = length(activity))
+data_new
+x= flextable(data_new,  col_keys = names(data_new),
+    cwidth = 0.75,
+    cheight = 0.25,
+   defaults = list(),
+    theme_fun = theme_booktabs)
+x</code></pre>
 <p><strong>STOP</strong>: Before moving on, it’s a good time to establish some good <em>GitHub</em> practices. You have just done an important step. It’s time to save this file, stage it and commit it so that you have a record. Push these changes up using <em>GitHub Desktop</em>. It’s important to do this frequently. It’s probably not needed after every line of code, but it’s good to do this when you have completed an important coding step. Of course, there’s no harm in doing it more often. It will provide fine-scale tracking for you!</p>
 <blockquote>
 <p><strong>Question 5</strong>: The new version of your Rmarkdown file should now be up on <em>GitHub</em>. In the browser window click on your most recent commit. Have a look at the file versioning system. You will notice two files side-by-side. Describe what you notice is being presented online. What do the red and green highlights mean?</p>
 </blockquote>
-<pre class="r"><code>## Write your answer here....remember to use &#39;#&quot; in front of your text.</code></pre>
+<pre class="r"><code>## Write your answer here....remember to use &#39;#&quot; in front of your text.
+
+# The red area means the codes which you have deleted and the green area means the codes which you changed and added.</code></pre>
 </div>
 <div id="task-5" class="section level1">
 <h1><strong>Task 5</strong></h1>
 <p>Ignoring figures can be important because they take up quite a lot of space in your <em>GitHub</em> repo. For example, huge data files, or figures (e.g., png) can take up a tonne of space. We also might not need to save and track these because we can recreate them with our own code or re-download, process, save and track what we need.</p>
 <p><code>.gitignore</code> files are used to control what <em>Git</em> tracks and what it ignores. You should have created a new folder path: <code>output/figures/</code>. Write some code now to create a pretty figure using ggplot that shows the difference between control and acidification treatments for each of the fish species in the data set:</p>
-<pre class="r"><code># ggplot figure showing mean activity for each treatment (Control, OA) for each species.</code></pre>
+<pre class="r"><code>#ggplot figure showing mean activity for each treatment (Control, OA) for each species.
+data_2
+plot = ggplot(data_2, aes(x=species,y=activity,fill=treatment))+geom_boxplot()
+plot</code></pre>
 <p><strong>Stretch Task</strong>: The Clark et al. 2020 paper plots some pretty pictures on their figures. You have access to a folder called “pics/”. Add the pics of the difference species from the “pics/” folder to your new plot. Explore the function <code>annotation_raster()</code> which might help you achieve this goal.</p>
+<pre class="r"><code>acantho=readPNG(&quot;pics/acantho.png&quot;,native = FALSE, info = FALSE)
+ambon=readPNG(&quot;pics/ambon.png&quot;,native = FALSE, info = FALSE)
+chromis=readPNG(&quot;pics/chromis.png&quot;,native = FALSE, info = FALSE)
+humbug=readPNG(&quot;pics/humbug.png&quot;,native = FALSE, info = FALSE)
+lemon=readPNG(&quot;pics/lemon.png&quot;,native = FALSE, info = FALSE)
+ggplot(data_2, aes(x=species,y=activity,fill=treatment))+geom_boxplot()+
+   scale_y_continuous(limits = c(0,80))+
+   annotation_raster(acantho, xmin=0.5, xmax=1.5, ymin=60, ymax=75)+
+  annotation_raster(ambon, xmin=1.5, xmax=2.5, ymin=60, ymax=75)+
+  annotation_raster(chromis, xmin=2.5, xmax=3.5, ymin=60, ymax=75)+
+  annotation_raster(humbug, xmin=3.5, xmax=4.5, ymin=60, ymax=75)+
+  annotation_raster(lemon, xmin=4.5, xmax=5.5, ymin=60, ymax=75)+
+  theme_classic()</code></pre>
 <p>Note the code chunk used to make the figure. It has a <code>fig.cap</code> argument. That means Rmarkdown knows it’s a figure and it will allow you to create a figure reference call. In other words, we can refer to our Figure <a href="#fig:prettyfig"><strong>??</strong></a> by referring to the label for the chunk. This will automatically make a legend for us too (assuming you add one in). The same concept applied to Tables but the legend goes above these.</p>
 <p>Now that you have the figure you may also want to write / save it as a separate file. Use <code>ggsave</code> function to save the figure(s) to your new <code>output/figures/</code>:</p>
-<pre class="r"><code># Use ggsave to save the figure</code></pre>
+<pre class="r"><code># Use ggsave to save the figure
+ggsave(&#39;output/figures/plot.png&#39;,width = 16, height = 8)</code></pre>
 <blockquote>
 <p><strong>Question 6</strong>: Given that you have added <code>output/figures/</code> to your <code>.gitignore</code> file describe what you notice about what you see in <em>GitHub Desktop</em>.</p>
 </blockquote>
-<pre class="r"><code>## Write your answer here</code></pre>
+<pre class="r"><code>## Write your answer here
+
+# The figure has been ignored by the GitHub Desktop and it will not be automatically backed up and uploaded</code></pre>
 <p>Last question for this task. I promise! It’s important to think very carefully about what you track and ignore.</p>
 <blockquote>
 <p><strong>Question 7</strong>: Assume that you added the <code>pics/</code> folder to your working directory to plot pictures of each fish on your figure. Do you want to track the files in the pic/ folder on GitHub despite them being .png files? Explain your reasoning.</p>
 </blockquote>
-<pre class="r"><code>## Add your answer here</code></pre>
+<pre class="r"><code>## Add your answer here
+
+#Yes, I want to track the files in the p.folder on GitHub because if I don&#39;t do this, others downloading my code on github will not find the image I added and will get an error.</code></pre>
 </div>
 <div id="task-6" class="section level1">
 <h1><strong>Task 6</strong></h1>
 <p>This task involves teaming up with a collaborator. Exchange <em>GitHub</em> username details and add each other to your repo. Clone each others’ repo on to your computer. Re-run their code. Does it work? If not, correct it for them. Explain to them WHY it didn’t work. After all, they are right beside you! Think carefully about this. Will it still run on their computer if you have corrected it in a certain way?</p>
 <p>Now, lets create a new figure in the code block below that simplifies the one produced in <strong>Task 5</strong>. Instead of all species, lets just plot three of the species (chromis, lemon, and acantho). In the figure code chunk make sure you add the necessary arguments (e.g., <code>fig.cap</code>) so that you can refer to Figure <a href="#fig:collabFig"><strong>??</strong></a>.</p>
-<pre class="r"><code># You want to make changes to your collaborators figure in Task 5. Maybe you want to create a figure that focuses only on three fish species instead of the 5. More specifically, chromis, lemon, and acantho. Add code here to revise their figure to do that.</code></pre>
+<pre class="r"><code># You want to make changes to your collaborators figure in Task 5. Maybe you want to create a figure that focuses only on three fish species instead of the 5. More specifically, chromis, lemon, and acantho. Add code here to revise their figure to do that.
+data_new
+data3 = data_2 %&gt;% filter(species != &quot;humbug&quot;) %&gt;% filter(species != &quot;ambon&quot;)
+data3
+ggplot(data3, aes(x=species,y=activity,fill=treatment))+geom_boxplot()</code></pre>
 </div>
 <div id="task-7" class="section level1">
 <h1><strong>Task 7</strong></h1>
@@ -1724,8 +1766,45 @@ write_csv(data, file = path)</code></pre>
 <blockquote>
 <p><strong>Stretch Task</strong>: You can of course do this for each species seperately, but those who want a challenge, think about how you might use a loop or even some wrangling methods you have already learnt from the tidyverse to run these tests across all 6 species in a single block of code. If you’re familiar with functions, you can even think about writing your own function! All these strategies will avoid having to copy and paste large chunks of code. If you’re repeating anything, writing functions and loops are good ways to simplify.</p>
 </blockquote>
-<pre class="r"><code># Add your code here</code></pre>
-<pre class="r"><code># Using the resulting object created above, which should be a table with all the summary statistics, t, df and p-value for each species create a table. Note that there is a tab.cap argument in the chunk arguments. Write a caption here. </code></pre>
+<pre class="r"><code># Add your code here
+mydata &lt;- select(data1_1, c(species,treatment,activity))
+
+tsf &lt;- function(mydata,x){
+  testdata=mydata[which(mydata$species == x),]
+  test=t.test(testdata$activity[which(testdata$treatment==&quot;control&quot;)],testdata$activity[which(testdata$treatment==&quot;CO2&quot;)], var.equal=T)
+  p.value=test$p.value
+  t=test$statistic
+  species=x
+  confidence_min=test$conf.int[1]
+  confidence_max=test$conf.int[2]
+  df=test$parameter
+  mean_in_group_CO2=test$estimate[1]
+  mean_in_group_control=test$estimate[2]
+  c=data.frame(species, p.value,t,df,confidence_min,confidence_max,mean_in_group_CO2,mean_in_group_control)
+  c
+}
+
+
+table=tsf(mydata,&quot;lemon&quot;)
+table=table[-1,]
+for (i in unique(mydata$species)){
+  table = rbind(table,tsf(mydata, i))
+}
+
+table
+flextable(table,  col_keys = names(table),
+    cwidth = 0.75,
+    cheight = 0.25,
+   defaults = list(),
+    theme_fun = theme_booktabs)</code></pre>
+<pre class="r"><code># Using the resulting object created above, which should be a table with all the summary statistics, t, df and p-value for each species create a table. Note that there is a tab.cap argument in the chunk arguments. Write a caption here. 
+a1=flextable(table,  col_keys = names(table),
+    cwidth = 0.75,
+    cheight = 0.25,
+   defaults = list(),
+    theme_fun = theme_booktabs)
+table
+set_caption(a1,caption = &quot;The result from the t.test of all speciess&quot;,autonum = NULL,style = &quot;Table Caption&quot;,html_escape = TRUE)</code></pre>
 <p>Now that you have a table, you can reference it within a document. For example, you can make a call to Table <a href="#tab:table1"><strong>??</strong></a> by referring to the name of the code chunk. When you knit the html it will create a hyperlink to your table and insert a legend above the table for you. How cool is that!?</p>
 <blockquote>
 <p><strong>Question 8</strong>: Pick one of your favorite species and write about the results to a reader. Write in the Rmarkdown file below what 1) the means and mean differences between control and acidification treatment is along with 2) the 95% confidence intervals of the difference</p>
@@ -1733,20 +1812,111 @@ write_csv(data, file = path)</code></pre>
 <p>You can write your blurb below this. Before you do that, a few cool features of Rmarkdown. You can actually code in objects so that, when they are rendered they replace the inline code chunk with the result. To give you an example, an inline code chunk is written as follows: add code here. When you render the document, whatever you place in the “add code here” section will be rendered. In this case, we are giving a string, so it simply just adds that in the place where the code is, render and see for yourself.</p>
 <p>Moving forward on that you can also add in an object and whatever that objects value is will also be spit out. For example, consider the following: 10. What will happen? Well, it will place in the value 10 when rendered. Again, if you don’t believe me, check for yourself by rendering the document.</p>
 <p>This is all <strong>VERY</strong> cool because that means if your code or data change than you can update your entire report very fast. It’s also 100% reproducible. We know exactly where every single value in your report comes from. This is all pretty helpful when you want to check your code and report side-by-side. Now that you have a bit more detail fill in the following:</p>
-<p>Mean activity for species name here in the control group was add code to place mean for control (s / min) compared to the OA treatment group, which was mean for acidificaton treatment (s / min). The difference between control and OA treatment means was code mean difference bw treatment (s / min) (95% CI: code for lower CI to code for upper CI).</p>
+<p>Mean activity for humbug in the control group was table[5,8] (s / min) compared to the OA treatment group, which was table[5,7] (s / min). The difference between control and OA treatment means was table[5,7]-table[5,8] (s / min) (95% CI: table[5,5] to table[5,6]).</p>
 <p>Now, using what you just learnt, describe what the null hypothesis being tested was and provide statistical evidence (t-statistic, df, and p-value) to support your conclusion about whether we can reject the null hypothesis. Again, make sure you use in-line code. Write you answer below:</p>
 <p><strong>Write your answer here</strong></p>
+<p>The null hypothesis is that OA treatment of humbug does not cause significant differences. The p.value istable[5,2]&lt;0.05 and the df is table[5,4] and the t-statistic is table[5,3]. So, we can reject the null hypothesis.</p>
 <p>Re-analyse the data for a single species using permutations instead of a t-test. Do your results differ?</p>
+<p>The result of permutations is nearly close to the result of t-test.</p>
+<pre class="r"><code># Add your code here.
+testdata=mydata[which(mydata$species == &quot;humbug&quot;),]
+
+permuted_group_data &lt;- testdata %&gt;% mutate(treatment = treatment[sample(row_number())])
+
+permuted_t_test_results &lt;- t.test(permuted_group_data$activity[which(permuted_group_data$treatment==&quot;control&quot;)],permuted_group_data$activity[which(permuted_group_data$treatment==&quot;CO2&quot;)],var.equal=T)
+permuted_t_test_results
+
+t_test_statistic &lt;- test$statistic
+plot_tibble &lt;- tibble(value = samp_dist,extreme = (abs(samp_dist) &gt; abs(t_test_statistic)))
+permutated_pvalue &lt;- sum(plot_tibble$extreme)/n_reps
+t_test_pvalue&lt;- test$p.value
+data.frame(&quot;humbug&quot;, permutated_pvalue,t_test_pvalue)</code></pre>
 <blockquote>
 <p><strong>Stretch Task</strong>: If you really want a challenge try doing permutation tests for each species. Again, loops, functions or tidyverse (or even combinations might help).</p>
 </blockquote>
-<pre class="r"><code># Add your code here.</code></pre>
+<pre class="r"><code># Add your code here.
+permuted_test&lt;-function(species, n){
+  testdata=mydata[which(mydata$species == species),]
+  test=t.test(testdata$activity[which(testdata$treatment==&quot;control&quot;)],testdata$activity[which(testdata$treatment==&quot;CO2&quot;)], var.equal=T)
+  n_reps &lt;- n
+  samp_dist &lt;- rep(0,n_reps)
+  p_value&lt;- rep(0,n_reps)
+  for (i in 1:n_reps){
+    testdata=mydata[which(mydata$species == species),]
+    permuted_group_data &lt;- testdata %&gt;% mutate(treatment = treatment[sample(row_number())])
+    permuted_t_test_results &lt;- t.test(permuted_group_data$activity[which(permuted_group_data$treatment==&quot;control&quot;)],
+                                      permuted_group_data$activity[which(permuted_group_data$treatment==&quot;CO2&quot;)],
+                                      var.equal=T)
+    samp_dist[i] &lt;- permuted_t_test_results$statistic
+    p_value[i] &lt;- permuted_t_test_results$p.value
+  }
+
+  t_test_statistic &lt;- test$statistic
+  plot_tibble &lt;- tibble(value = samp_dist,extreme = (abs(samp_dist) &gt; abs(t_test_statistic)))
+  permutated_pvalue &lt;- sum(plot_tibble$extreme)/n_reps
+  t_test_pvalue&lt;- test$p.value
+  data.frame(species, permutated_pvalue,t_test_pvalue)
+}
+result=permuted_test(&quot;lemon&quot;, 1000)
+result=result[-1,]
+for (i in unique(mydata$species)){
+  result = rbind(result,permuted_test(i,1000))
+}
+result
+a2=flextable(result,  col_keys = names(result),
+    cwidth = 0.75,
+    cheight = 0.25,
+   defaults = list(),
+    theme_fun = theme_booktabs)
+set_caption(a2,caption = &quot;The p.value form the permutated test and the t.test of all species&quot;,
+            autonum = NULL,style = &quot;Table Caption&quot;,
+            html_escape = TRUE)</code></pre>
 <p>Below. Add a few sentences for the species (or multiple species) you talked about above to describe the permutation results:</p>
 <p><strong>Add your text and inline code chunks here</strong></p>
+<p>In the study of the humbug, we can find that the result[5,2]is similar to the result[5,3]. Amd both of them are &lt;0. So, we can soundly get the result that the OA in the humbug can cause the difference in the activity.</p>
 </div>
 <div id="task-10" class="section level1">
 <h1><strong>Task 10</strong></h1>
 <p>This is a stretch task on the use of <em>GitHub</em> and the challenges (or maybe lack of challenges) of reproducing others’ work. If you finish the above tasks, then, have a crack at this one. See the html for details.</p>
+<p>The information in the <code>index.rmd</code> is below.</p>
+<pre class="r"><code>oaa &lt;- read.csv(&#39;./data/OA_activitydat_20190302_BIOL3207.csv&#39;, header=TRUE)
+oaa
+
+library(tidyverse)
+library(ggpubr)
+
+drawplot&lt;-function(x){
+  ggplot(oaa %&gt;% filter(species== x) ,aes(x=treatment,y=activity,color=treatment))+
+    geom_point(aes(x=treatment, y=activity))+
+    geom_jitter(width=0.2, height=0)+
+    facet_grid(&quot;~ loc&quot;) +
+    theme(panel.background = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_rect(fill=NA,color=&quot;black&quot;, size=0.5, linetype=&quot;solid&quot;))+
+    geom_boxplot()+
+    theme(legend.position = &#39;none&#39;)
+    
+      
+}
+
+
+ambon = drawplot(&quot;ambon&quot;)  
+lemon = drawplot(&quot;lemon&quot;)
+chromis = drawplot(&quot;chromis&quot;)
+acantho = drawplot(&quot;acantho&quot;)
+humbug= drawplot(&quot;humbug&quot;)
+whitedams =drawplot(&quot;whitedams&quot;)
+
+ggarrange(ambon,lemon,chromis,acantho,humbug,whitedams,ncol = 6, nrow = 1)
+
+# format dataframe</code></pre>
+<p>Think about some things that can be improved in their code.
+List 3 things you think could be improved and provide a brief explanation for why.</p>
+<ol style="list-style-type: decimal">
+<li>The code is too complex and prone to bugs when running.</li>
+<li>The picture can be drawn out simply first, and the details can be modified by other drawing software.</li>
+<li>It’s not in markdown format, so it’s a little difficult to read.</li>
+</ol>
 </div>
 
 
